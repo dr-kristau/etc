@@ -1,0 +1,138 @@
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+#port 47171
+-A PREROUTING -i tun0 -p tcp --dport 47171 -j DNAT --to-destination 10.0.0.1:22
+
+#enp1s0 is WAN interface, #enp3s0 is LAN interface
+# -A POSTROUTING -o enp1s0 -j MASQUERADE #remove this to disable all non-VPN traffic
+
+#tun0 is VPN interface
+-A POSTROUTING -o tun0 -j MASQUERADE
+
+COMMIT
+
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# Service rules
+# basic global accept rules - ICMP, loopback, traceroute, established all accepted
+-A INPUT -s 127.0.0.0/8 -d 127.0.0.0/8 -i lo -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# enable traceroute rejections to get sent out
+-A INPUT -p udp -m udp --dport 33434:33523 -j REJECT --reject-with icmp-port-unreachable
+
+# SSH - accept from LAN (enp3s0) & VPN (tun0)
+-A INPUT -i enp3s0 -p tcp --dport 22 -j ACCEPT
+-A INPUT -i tun0 -p tcp --dport 22 -j ACCEPT
+
+# SAMBA - accept from LAN (enp3s0)
+-A INPUT -i enp3s0 -p udp --dport 137 -j ACCEPT
+-A INPUT -i enp3s0 -p udp --dport 138 -j ACCEPT
+-A INPUT -i enp3s0 -p tcp --dport 139 -j ACCEPT
+-A INPUT -i enp3s0 -p tcp --dport 445 -j ACCEPT
+
+# Log dropped forwarded packets to var/log/messages
+-N DROP_INPUT_53
+-A DROP_INPUT_53 -m limit --limit 2/min -j LOG --log-prefix "Dropped_Input_53: " --log-level 4
+-A DROP_INPUT_53 -j DROP
+
+-N DROP_INPUT_853
+-A DROP_INPUT_853 -m limit --limit 2/min -j LOG --log-prefix "Dropped_Input_853: " --log-level 4
+-A DROP_INPUT_853 -j DROP
+
+-N DROP_INPUT_443
+-A DROP_INPUT_443 -m limit --limit 2/min -j LOG --log-prefix "Dropped_Input_443: " --log-level 4
+-A DROP_INPUT_443 -j DROP
+
+#PI-HOLE
+-A INPUT -i enp3s0 -p tcp --dport 80 -j ACCEPT
+
+#DNS
+-A INPUT -p tcp -d 10.21.194.107 --dport 53 -j ACCEPT
+-A INPUT -p udp -d 10.21.194.107 --dport 53 -j ACCEPT
+-A INPUT -p tcp -d 0.0.0.0/0 --dport 53 -j DROP_INPUT_53
+-A INPUT -p udp -d 0.0.0.0/0 --dport 53 -j DROP_INPUT_53
+
+#DoT
+-A INPUT -p tcp -d 10.21.194.107 --dport 853 -j ACCEPT
+-A INPUT -p udp -d 10.21.194.107 --dport 853 -j ACCEPT
+-A INPUT -p tcp -d 0.0.0.0/0 --dport 853 -j DROP_INPUT_853
+-A INPUT -p udp -d 0.0.0.0/0 --dport 853 -j DROP_INPUT_853
+
+#DoH
+-A INPUT -p tcp -d 1.1.1.1 --dport 443 -j DROP_INPUT_443
+-A INPUT -p udp -d 1.1.1.1 --dport 443 -j DROP_INPUT_443
+-A INPUT -p tcp -d 1.0.0.1 --dport 443 -j DROP_INPUT_443
+-A INPUT -p udp -d 1.0.0.1 --dport 443 -j DROP_INPUT_443
+-A INPUT -p tcp -d 104.16.248.249 --dport 443 -j DROP_INPUT_443
+-A INPUT -p udp -d 104.16.248.249 --dport 443 -j DROP_INPUT_443
+-A INPUT -p tcp -d 104.16.249.249 --dport 443 -j DROP_INPUT_443
+-A INPUT -p udp -d 104.16.249.249 --dport 443 -j DROP_INPUT_443
+
+-A INPUT -i enp3s0 -p tcp --dport 67 -j ACCEPT
+-A INPUT -i enp3s0 -p udp --dport 67 -j ACCEPT
+-A INPUT -i lo -p tcp --dport 4711 -j ACCEPT
+
+# drop all other inbound traffic
+-A INPUT -j DROP
+
+# Forwarding rules
+# forward packets along established/related connections
+-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+# DROP ALL OTHER DNS
+-N DROP_FORWARD_53
+-A DROP_FORWARD_53 -m limit --limit 2/min -j LOG --log-prefix "Dropped_Forward_53: " --log-level 4
+-A DROP_FORWARD_53 -j DROP
+
+-N DROP_FORWARD_853
+-A DROP_FORWARD_853 -m limit --limit 2/min -j LOG --log-prefix "Dropped_Forward_853: " --log-level 4
+-A DROP_FORWARD_853 -j DROP
+
+-N DROP_FORWARD_443
+-A DROP_FORWARD_443 -m limit --limit 2/min -j LOG --log-prefix "Dropped_Forward_443: " --log-level 4
+-A DROP_FORWARD_443 -j DROP
+
+#DNS
+-A FORWARD -p tcp -d 10.21.194.107 --dport 53 -j ACCEPT
+-A FORWARD -p udp -d 10.21.194.107 --dport 53 -j ACCEPT
+-A FORWARD -p tcp -d 0.0.0.0/0 --dport 53 -j DROP_FORWARD_53
+-A FORWARD -p udp -d 0.0.0.0/0 --dport 53 -j DROP_FORWARD_53
+
+#DoT
+-A FORWARD -p tcp -d 10.21.194.107 --dport 853 -j ACCEPT
+-A FORWARD -p udp -d 10.21.194.107 --dport 853 -j ACCEPT
+-A FORWARD -p tcp -d 0.0.0.0/0 --dport 853 -j DROP_FORWARD_853
+-A FORWARD -p udp -d 0.0.0.0/0 --dport 853 -j DROP_FORWARD_853
+
+#DoH
+-A FORWARD -p tcp -d 1.1.1.1 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p udp -d 1.1.1.1 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p tcp -d 1.0.0.1 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p udp -d 1.0.0.1 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p tcp -d 104.16.248.249 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p udp -d 104.16.248.249 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p tcp -d 104.16.249.249 --dport 443 -j DROP_FORWARD_443
+-A FORWARD -p udp -d 104.16.249.249 --dport 443 -j DROP_FORWARD_443
+
+#forward port 47171
+-A FORWARD -i tun0 -p tcp -d 10.0.0.1 --dport 47171 -j ACCEPT
+
+# forward from LAN (enp3s0) to WAN (enp1s0)
+# -A FORWARD -i enp3s0 -o enp1s0 -j ACCEPT #remove this to disable all non-VPN traffic
+
+# forward from LAN (enp3s0) to VPN (tun0)
+-A FORWARD -i enp3s0 -o tun0 -j ACCEPT
+
+# drop all other forwarded traffic
+-A FORWARD -j DROP
+
+COMMIT
