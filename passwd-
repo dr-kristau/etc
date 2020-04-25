@@ -30,3 +30,5 @@ pollinate:x:110:1::/var/cache/pollinate:/bin/false
 sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
 systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
 tofol:x:1000:1000:tofol:/home/tofol:/bin/bash
+lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false
+dhcpd:x:112:117::/var/run:/usr/sbin/nologin
