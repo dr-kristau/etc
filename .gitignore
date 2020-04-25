@@ -1,2 +1,3 @@
 #no openvpn config files
 *.ovpn
+*.db
