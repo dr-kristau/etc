@@ -1,2 +1,2 @@
 #no openvpn config files
-.ovpn
+*.ovpn
