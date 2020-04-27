@@ -21,7 +21,7 @@ tape:*::
 sudo:*::tofol
 audio:*::
 dip:*::tofol
-www-data:*::
+www-data:*::pihole
 backup:*::
 operator:*::
 list:*::
