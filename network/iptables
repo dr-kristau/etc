@@ -9,7 +9,7 @@
 
 # enp1s0 is WAN interface, #enp3s0 is LAN interface
 # comment out this to disable all non-VPN traffic
--A POSTROUTING -o enp1s0 -j MASQUERADE
+# -A POSTROUTING -o enp1s0 -j MASQUERADE
 
 # tun0 is VPN interface
 -A POSTROUTING -o tun0 -j MASQUERADE
@@ -67,7 +67,8 @@ COMMIT
 -A FORWARD -i tun0 -p tcp -d 10.0.0.1 --dport 47171 -j ACCEPT
 
 # forward from LAN (enp3s0) to WAN (enp1s0)
-# -A FORWARD -i enp3s0 -o enp1s0 -j ACCEPT #remove this to disable all non-VPN traffic
+# comment out this to disable all non-VPN traffic
+# -A FORWARD -i enp3s0 -o enp1s0 -j ACCEPT
 
 # forward from LAN (enp3s0) to VPN (tun0)
 -A FORWARD -i enp3s0 -o tun0 -j ACCEPT
