@@ -42,6 +42,14 @@ COMMIT
 -A INPUT -i enp3s0 -p udp --dport 67 -j ACCEPT
 -A INPUT -i lo -p tcp --dport 4711 -j ACCEPT
 
+#nginx
+-A INPUT -i enp3s0 -p tcp --dport 81 -j ACCEPT
+
+#tor
+-A INPUT -i lo -p tcp --dport 9050 -j ACCEPT
+-A INPUT -i enp3s0 -p tcp --dport 9050 -j ACCEPT
+-A INPUT -i tun0 -p tcp --dport 9050 -j ACCEPT
+
 # SSH - accept from LAN (enp3s0) & VPN (tun0)
 -A INPUT -i enp3s0 -p tcp --dport 22 -j ACCEPT
 -A INPUT -i tun0 -p tcp --dport 22 -j ACCEPT
