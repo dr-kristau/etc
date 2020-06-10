@@ -56,6 +56,6 @@ lxd:x:116:tofol
 systemd-coredump:x:999:
 tofol:x:1000:
 dhcpd:x:117:
-pihole:x:997:
+pihole:x:997:www-data
 vnstat:x:118:
 debian-tor:x:119:
