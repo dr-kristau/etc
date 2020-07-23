@@ -18,7 +18,7 @@ voice:x:22:
 cdrom:x:24:tofol
 floppy:x:25:
 tape:x:26:
-sudo:x:27:tofol
+sudo:x:27:tofol,minecraftuser
 audio:x:29:
 dip:x:30:tofol
 www-data:x:33:pihole
@@ -59,3 +59,4 @@ dhcpd:x:117:
 pihole:x:997:www-data
 vnstat:x:118:
 debian-tor:x:119:
+minecraftuser:x:1001:

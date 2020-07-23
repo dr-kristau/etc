@@ -63,6 +63,10 @@ COMMIT
 -A INPUT -i enp3s0 -p tcp --dport 139 -j ACCEPT
 -A INPUT -i enp3s0 -p tcp --dport 445 -j ACCEPT
 
+# MINECRAFT
+-A INPUT -i enp3s0 -p tcp --dport 25565 -j ACCEPT
+-A INPUT -i enp3s0 -p udp --dport 25565 -j ACCEPT
+
 # drop all other inbound traffic
 -A INPUT -j DROP
 

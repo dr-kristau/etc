@@ -35,3 +35,4 @@ dhcpd:x:112:117::/var/run:/usr/sbin/nologin
 pihole:x:997:997::/home/pihole:/usr/sbin/nologin
 vnstat:x:113:118:vnstat daemon,,,:/var/lib/vnstat:/usr/sbin/nologin
 debian-tor:x:114:119::/var/lib/tor:/bin/false
+minecraftuser:x:1001:1001::/home/minecraftuser:/bin/bash
