@@ -60,4 +60,3 @@ pihole:!::www-data
 vnstat:!::
 debian-tor:!::
 minecraftuser:!::
-minecraft:!::

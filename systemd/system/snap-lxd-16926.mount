@@ -1,10 +1,10 @@
 [Unit]
-Description=Mount unit for core18, revision 1754
+Description=Mount unit for lxd, revision 16926
 Before=snapd.service
 
 [Mount]
-What=/var/lib/snapd/snaps/core18_1754.snap
-Where=/snap/core18/1754
+What=/var/lib/snapd/snaps/lxd_16926.snap
+Where=/snap/lxd/16926
 Type=squashfs
 Options=nodev,ro,x-gdu.hide
 LazyUnmount=yes
