@@ -1,0 +1,165 @@
+#
+# Sample configuration file for ISC dhcpd for Debian
+#
+# Attention: If /etc/ltsp/dhcpd.conf exists, that will be used as
+# configuration file instead of this file.
+#
+#
+
+# The ddns-updates-style parameter controls whether or not the server will
+# attempt to do a DNS update when a lease is confirmed. We default to the
+# behavior of the version 2 packages ('none', since DHCP v2 didn't
+# have support for DDNS.)
+ddns-update-style none;
+
+# option definitions common to all supported networks...
+#option domain-name "example.org";
+#option domain-name-servers ns1.example.org, ns2.example.org;
+
+default-lease-time 86400;
+max-lease-time 172800;
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+authoritative;
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+log-facility local7;
+
+#CDI now commented
+subnet 10.0.0.0 netmask 255.255.255.0 {
+	range 10.0.0.130 10.0.0.255;
+	allow unknown-clients;
+    
+	option routers 10.0.0.1;
+	option domain-name-servers 10.21.198.3; 
+}
+
+group {
+	option routers 10.0.0.1;
+	option domain-name-servers 10.21.198.3; 
+	use-host-decl-names on;
+	
+	host PROFROUTER {
+		hardware ethernet 00:0e:c4:ce:e9:84;
+		fixed-address 10.0.0.105;
+	}
+	
+	host CHRIS-DESKTOP5 {
+		hardware ethernet 00:e0:4c:69:2b:e3;
+		fixed-address 10.0.0.106;
+	}
+	
+	host CHRIS-WINVM {
+		hardware ethernet 08:00:27:ff:cb:48;
+		fixed-address 10.0.0.107;
+	}
+	
+	host LAPTOP {
+		hardware ethernet 10:bf:48:19:f6:c6;
+		fixed-address 10.0.0.108;
+	}	
+
+	host TPLINK-RE450 {
+		hardware ethernet 18:d6:c7:61:da:14;
+		fixed-address 10.0.0.109;
+	}
+	
+	host TPLINK-AC1200 {
+		hardware ethernet 1c:3b:f3:ca:26:6e;
+		fixed-address 10.0.0.110;
+	}
+	
+	host ASUS-WIFI-USB {
+		hardware ethernet 2c:4d:54:b3:ca:4f;
+		fixed-address 10.0.0.111;
+	}
+	
+	host LAPTOP-WIFI {
+		hardware ethernet 44:6d:57:6b:99:cb;
+		fixed-address 10.0.0.112;
+	}	
+	
+	host KIDS-DESKTOP-WIFI {
+		hardware ethernet 4c:eb:bd:67:4b:e5;
+		fixed-address 10.0.0.113;
+	}
+	
+	host GEMMA-LENOVO {
+		hardware ethernet 54:ee:75:ae:9e:99;
+		fixed-address 10.0.0.114;
+	}
+	
+	host GEMMA-LENOVO-WIFI {
+		hardware ethernet 68:07:15:f2:01:61;
+		fixed-address 10.0.0.115;
+	}
+	
+	host CHRIS-DESKTOP {
+		hardware ethernet 74:d4:35:12:27:88;
+		fixed-address 10.0.0.116;
+	}
+	
+	host REOLINK-ENTRADA {
+		hardware ethernet 78:db:2f:ba:2e:70;
+		fixed-address 10.0.0.117;
+	}
+	
+	host KIDS-DESKTOP {
+		hardware ethernet 80:e8:2c:d1:64:f6;
+		fixed-address 10.0.0.118;
+	}
+	
+	host GEMMA-DESKTOP {
+		hardware ethernet 84:16:f9:00:01:64;
+		fixed-address 10.0.0.119;
+	}
+	
+	host TABLET {
+		hardware ethernet 84:b8:b8:a3:17:a1;
+		fixed-address 10.0.0.120;
+	}	
+	
+	host MIBOX {
+		hardware ethernet 8c:5a:f8:12:5a:72;
+		fixed-address 10.0.0.121;
+	}
+	
+	host CHRIS-EPHONE {
+		hardware ethernet 8c:f5:a3:12:35:cd;
+		fixed-address 10.0.0.122;
+	}
+	
+	host TPLINK-WIFI-USB {
+		hardware ethernet 98:48:27:38:aa:fd;
+		fixed-address 10.0.0.123;
+	}
+	
+	host PRINTER {
+		hardware ethernet 9c:ae:d3:bb:d0:15;
+		fixed-address 10.0.0.124;
+	}	
+	
+	host REOLINK-PORTA {
+		hardware ethernet b4:52:a9:b1:51:0e;
+		fixed-address 10.0.0.125;
+	}
+	
+	host GEMMA-MOBILE {
+		hardware ethernet b4:9d:0b:23:7d:b6;
+		fixed-address 10.0.0.126;
+	}
+	
+	host LLUC-MOBILE {
+		hardware ethernet c0:10:b1:35:91:88;
+		fixed-address 10.0.0.127;
+	}
+
+	host ALBA-BQ-MOBILE {
+		hardware ethernet 4c:74:03:0b:fa:28;
+		fixed-address 10.0.0.128;
+	}						
+}
+
+;
