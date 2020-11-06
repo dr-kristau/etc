@@ -1,21 +1,6 @@
 #!/bin/sh
-#
-# PPP down hook script for resolvconf
-#
-# Reconfigures resolver to take into account
-# the disappearance of the ppp interface.
-#
-# This file is part of the resolvconf package.
-#
+# ppp.ip-down hook script for resolvconf
+# Written by Roy Marples <roy@marples.name> under the BSD-2 license
 
 [ -x /sbin/resolvconf ] || exit 0
-
-case "$6" in
-  nm-pptp-service-*|nm-l2tp-service-*|/org/freedesktop/NetworkManager/PPP/*)
-    # NetworkManager handles it
-    exit 0
-    ;;
-esac
-
-/sbin/resolvconf -d "${PPP_IFACE}.pppd"
-
+/sbin/resolvconf -f -d "$PPP_IFACE"
