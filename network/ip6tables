@@ -24,10 +24,10 @@
 
 ###############################################################################
 #
-#           Basic iptables/IPv4 template for an ordinary servers
+#           Basic ip6tables/IPv6 template for an ordinary servers
 #
 # This file is in iptables-restore format. See the man pages for 
-# iptables-restore(8) and iptables-save(8).
+# ip6tables-restore(8) and ip6tables-save(8).
 #
 # The following is a set of firewall rules that should be applicable to Linux 
 # servers running within departments. It is intended to provide a useful 
@@ -35,8 +35,7 @@
 # a host.
 #
 # Parts 1 and 3 of these rules are the same for each host, whilst part 2 can be 
-# populated with rules specific to particular hosts. The optional part 4 is
-# prepared for a NAT rules, e.g. for port forwarding, redirect, masquerade...
+# populated with rules specific to particular hosts.
 #
 # This template is based on http://jdem.cz/v64a3 from University of Leicester.
 #
@@ -71,13 +70,7 @@
 -A INPUT -m conntrack --ctstate INVALID -j DROP
 
 # Block remote packets claiming to be from a loopback address.
--A INPUT -s 127.0.0.0/8 ! -i lo -j DROP
-
-# Drop all packets that are going to broadcast, multicast or anycast address.
--A INPUT -m addrtype --dst-type BROADCAST -j DROP
--A INPUT -m addrtype --dst-type MULTICAST -j DROP
--A INPUT -m addrtype --dst-type ANYCAST -j DROP
--A INPUT -d 224.0.0.0/4 -j DROP
+-A INPUT -s ::1/128 ! -i lo -j DROP
 
 # Chain for preventing SSH brute-force attacks.
 # Permits 10 new connections within 5 minutes from a single host then drops 
@@ -85,7 +78,7 @@
 # log at up 1 attempt per second to prevent filling of logs.
 -N SSHBRUTE
 -A SSHBRUTE -m recent --name SSH --set
--A SSHBRUTE -m recent --name SSH --update --seconds 300 --hitcount 10 -m limit --limit 1/second --limit-burst 100 -j LOG --log-prefix "iptables[SSH-brute]: "
+-A SSHBRUTE -m recent --name SSH --update --seconds 300 --hitcount 10 -m limit --limit 1/second --limit-burst 100 -j LOG --log-prefix "ip6tables[SSH-brute]: "
 -A SSHBRUTE -m recent --name SSH --update --seconds 300 --hitcount 10 -j DROP
 -A SSHBRUTE -j ACCEPT
 
@@ -94,7 +87,7 @@
 # some victim when replying to ICMP ECHO from a spoofed source.
 -N ICMPFLOOD
 -A ICMPFLOOD -m recent --set --name ICMP --rsource
--A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -m limit --limit 1/sec --limit-burst 1 -j LOG --log-prefix "iptables[ICMP-flood]: "
+-A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -m limit --limit 1/sec --limit-burst 1 -j LOG --log-prefix "ip6tables[ICMP-flood]: "
 -A ICMPFLOOD -m recent --update --seconds 1 --hitcount 6 --name ICMP --rsource --rttl -j DROP
 -A ICMPFLOOD -j ACCEPT
 
@@ -103,7 +96,6 @@
 # 2. HOST SPECIFIC RULES                                                      #
 #                                                                             #
 # This section is a good place to enable your host-specific services.         #
-# ! DO NOT FORGOT TO COPY THESE RULES TO firewall.ip6tables TO ALLOW IPV6 !   #
 ###############################################################################
 
 # VNC port - accept from LAN (enp3s0)
@@ -155,6 +147,7 @@
 # forward from LAN (enp3s0) to VPN (wg0)
 -A FORWARD -i enp3s0 -o wg0 -j ACCEPT
 
+
 ###############################################################################
 # 3. GENERAL RULES                                                            #
 #                                                                             #
@@ -165,16 +158,33 @@
 # brute-force attacks.
 -A INPUT -p tcp --dport 22 --syn -m conntrack --ctstate NEW -j SSHBRUTE
 
-# Permit useful IMCP packet types.
-# Note: RFC 792 states that all hosts MUST respond to ICMP ECHO requests.
-# Blocking these can make diagnosing of even simple faults much more tricky.
-# Real security lies in locking down and hardening all services, not by hiding.
--A INPUT -p icmp --icmp-type 0  -m conntrack --ctstate NEW -j ACCEPT
--A INPUT -p icmp --icmp-type 3  -m conntrack --ctstate NEW -j ACCEPT
--A INPUT -p icmp --icmp-type 8  -m conntrack --ctstate NEW -j ICMPFLOOD
--A INPUT -p icmp --icmp-type 11 -m conntrack --ctstate NEW -j ACCEPT
+# Permit needed ICMP packet types for IPv6 per RFC 4890.
+-A INPUT              -p ipv6-icmp --icmpv6-type 1   -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 2   -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 3   -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 4   -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 133 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 134 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 135 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 136 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 137 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 141 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 142 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 130 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 131 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 132 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 143 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 148 -j ACCEPT
+-A INPUT              -p ipv6-icmp --icmpv6-type 149 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 151 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 152 -j ACCEPT
+-A INPUT -s fe80::/10 -p ipv6-icmp --icmpv6-type 153 -j ACCEPT
 
-# Do not log packets that are going to ports used by SMB 
+# Permit IMCP echo requests (ping) and use ICMPFLOOD chain for preventing ping 
+# flooding.
+-A INPUT -p ipv6-icmp --icmpv6-type 128 -j ICMPFLOOD
+
+# Do not log packets that are going to ports used by SMB
 # (Samba / Windows Sharing).
 -A INPUT -p udp -m multiport --dports 135,445 -j DROP
 -A INPUT -p udp --dport 137:139 -j DROP
@@ -191,10 +201,9 @@
 -A INPUT -p tcp --dport 113 --syn -m conntrack --ctstate NEW -j REJECT --reject-with tcp-reset
 
 # Prevent DOS by filling log files.
--A INPUT -m limit --limit 1/second --limit-burst 100 -j LOG --log-prefix "iptables[DOS]: "
+-A INPUT -m limit --limit 1/second --limit-burst 100 -j LOG --log-prefix "ip6tables[DOS]: "
 
 COMMIT
-
 
 ###############################################################################
 # 4. HOST SPECIFIC NAT RULES                                                  #
