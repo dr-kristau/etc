@@ -12,3 +12,4 @@
 
 nameserver 9.9.9.9
 nameserver fe80::36e3:80ff:febe:b830%2
+nameserver fdb1:3d0e:7458:1f46::2
