@@ -210,3 +210,22 @@
 -A INPUT -m limit --limit 1/second --limit-burst 100 -j LOG --log-prefix "ip6tables[DOS]: "
 
 COMMIT
+
+###############################################################################
+# 4. HOST SPECIFIC NAT RULES                                                  #
+#                                                                             #
+# Uncomment this section if you want to use NAT table, e.g. for port          #
+# forwarding, redirect, masquerade...                                         #
+###############################################################################
+
+*nat
+
+# Base policy
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# wg0 is VPN interface
+-A POSTROUTING -o wg0 -j MASQUERADE
+
+COMMIT
