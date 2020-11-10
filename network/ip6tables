@@ -146,7 +146,7 @@
 
 # forward from LAN (enp3s0) to VPN (wg0)
 -A FORWARD -i enp3s0 -o wg0 -j ACCEPT
-
+-A FORWARD -s fdb1:3d0e:7458:1f46::/64 -j ACCEPT
 
 ###############################################################################
 # 3. GENERAL RULES                                                            #
