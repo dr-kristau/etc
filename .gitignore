@@ -1,3 +1,4 @@
 #no openvpn config files
 *.ovpn
 *.db
+wireguard/wg0.conf

@@ -110,10 +110,16 @@
 #-A INPUT -i enp3s0 -p tcp --dport 5900 -j ACCEPT
 
 #WIREGUARD
--A INPUT -i enp3s0 -p tcp --dport 4160 -j ACCEPT
--A INPUT -i enp3s0 -p udp --dport 500 -j ACCEPT
--A INPUT -i enp3s0 -p udp --dport 4500 -j ACCEPT
--A INPUT -i enp3s0 -p udp --dport 51820 -j ACCEPT
+#-A INPUT -i enp3s0 -p tcp --dport 4160 -j ACCEPT
+#-A INPUT -i enp3s0 -p udp --dport 500 -j ACCEPT
+#-A INPUT -i enp3s0 -p udp --dport 4500 -j ACCEPT
+#-A INPUT -i enp3s0 -p udp --dport 51820 -j ACCEPT
+#-A INPUT -i enp3s0 -p tcp --dport 443 -j ACCEPT
+#-A INPUT -i wg0 -p tcp --dport 4160 -j ACCEPT
+#-A INPUT -i wg0 -p udp --dport 500 -j ACCEPT
+#-A INPUT -i wg0 -p udp --dport 4500 -j ACCEPT
+#-A INPUT -i wg0 -p udp --dport 51820 -j ACCEPT
+#-A INPUT -i wg0 -p tcp --dport 443 -j ACCEPT
 
 #PI-HOLE
 -A INPUT -i enp3s0 -p tcp --dport 80 -j ACCEPT
