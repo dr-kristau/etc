@@ -107,11 +107,11 @@
 #-A INPUT -i enp3s0 -p udp --dport 4500 -j ACCEPT
 #-A INPUT -i enp3s0 -p udp --dport 51820 -j ACCEPT
 #-A INPUT -i enp3s0 -p tcp --dport 443 -j ACCEPT
-#-A INPUT -i wg0 -p tcp --dport 4160 -j ACCEPT
-#-A INPUT -i wg0 -p udp --dport 500 -j ACCEPT
-#-A INPUT -i wg0 -p udp --dport 4500 -j ACCEPT
-#-A INPUT -i wg0 -p udp --dport 51820 -j ACCEPT
-#-A INPUT -i wg0 -p tcp --dport 443 -j ACCEPT
+#-A INPUT -i tun0 -p tcp --dport 4160 -j ACCEPT
+#-A INPUT -i tun0 -p udp --dport 500 -j ACCEPT
+#-A INPUT -i tun0 -p udp --dport 4500 -j ACCEPT
+#-A INPUT -i tun0 -p udp --dport 51820 -j ACCEPT
+#-A INPUT -i tun0 -p tcp --dport 443 -j ACCEPT
 
 #PI-HOLE
 -A INPUT -i enp3s0 -p tcp --dport 80 -j ACCEPT
@@ -127,11 +127,11 @@
 #tor
 -A INPUT -i lo -p tcp --dport 9050 -j ACCEPT
 -A INPUT -i enp3s0 -p tcp --dport 9050 -j ACCEPT
--A INPUT -i wg0 -p tcp --dport 9050 -j ACCEPT
+-A INPUT -i tun0 -p tcp --dport 9050 -j ACCEPT
 
-# SSH - accept from LAN (enp3s0) & VPN (wg0)
+# SSH - accept from LAN (enp3s0) & VPN (tun0)
 -A INPUT -i enp3s0 -p tcp --dport 22 -j ACCEPT
--A INPUT -i wg0 -p tcp --dport 22 -j ACCEPT
+-A INPUT -i tun0 -p tcp --dport 22 -j ACCEPT
 
 # DHCP client requests - accept from LAN (enp3s0)
 -A INPUT -i enp3s0 -p udp --dport 67:68 -j ACCEPT
@@ -150,14 +150,14 @@
 -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 #forward port 47171
-#-A FORWARD -i wg0 -p tcp -d 10.0.0.1 --dport 47171 -j ACCEPT
+#-A FORWARD -i tun0 -p tcp -d 10.0.0.1 --dport 47171 -j ACCEPT
 
-# forward from LAN (enp3s0) to WAN (wg0)
+# forward from LAN (enp3s0) to WAN (enp1s0)
 # comment out this to disable all non-VPN traffic
-# -A FORWARD -i enp3s0 -o wg0 -j ACCEPT
+# -A FORWARD -i enp3s0 -o enp1s0 -j ACCEPT
 
-# forward from LAN (enp3s0) to VPN (wg0)
--A FORWARD -i enp3s0 -o wg0 -j ACCEPT
+# forward from LAN (enp3s0) to VPN (tun0)
+-A FORWARD -i enp3s0 -o tun0 -j ACCEPT
 
 
 ###############################################################################
@@ -231,7 +231,7 @@ COMMIT
 :POSTROUTING ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
 
-# wg0 is VPN interface
--A POSTROUTING -o wg0 -j MASQUERADE
+# tun0 is VPN interface
+-A POSTROUTING -o tun0 -j MASQUERADE
 
 COMMIT
