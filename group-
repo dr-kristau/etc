@@ -60,3 +60,5 @@ pihole:x:997:www-data
 vnstat:x:118:
 debian-tor:x:119:
 minecraftuser:x:1001:
+guest:x:1002:
+wireshark:x:120:

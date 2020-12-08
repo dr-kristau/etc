@@ -1,20 +1,4 @@
-#
-# Sample configuration file for ISC dhcpd for Debian
-#
-# Attention: If /etc/ltsp/dhcpd.conf exists, that will be used as
-# configuration file instead of this file.
-#
-#
-
-# The ddns-updates-style parameter controls whether or not the server will
-# attempt to do a DNS update when a lease is confirmed. We default to the
-# behavior of the version 2 packages ('none', since DHCP v2 didn't
-# have support for DDNS.)
-ddns-update-style none;
-
-# option definitions common to all supported networks...
-#option domain-name "example.org";
-#option domain-name-servers ns1.example.org, ns2.example.org;
+rs ns1.example.org, ns2.example.org;
 
 default-lease-time 86400;
 max-lease-time 172800;
@@ -43,22 +27,22 @@ group {
 	option domain-name-servers 10.0.0.169; 
 	use-host-decl-names on;
 	
-	host SUN {
+	host PROFROUTER {
 		hardware ethernet 00:0e:c4:ce:e9:84;
-		fixed-address 10.0.0.1;
+		fixed-address 10.0.0.105;
 	}
 	
-	host JUPITER-5 {
+	host CHRIS-DESKTOP5 {
 		hardware ethernet 00:e0:4c:69:2b:e3;
 		fixed-address 10.0.0.106;
 	}
 	
-	host MARS {
+	host CHRIS-WINVM {
 		hardware ethernet 08:00:27:ff:cb:48;
 		fixed-address 10.0.0.107;
 	}
 	
-	host NEPTUNE {
+	host LAPTOP {
 		hardware ethernet 10:bf:48:19:f6:c6;
 		fixed-address 10.0.0.108;
 	}	
@@ -78,27 +62,27 @@ group {
 		fixed-address 10.0.0.111;
 	}
 	
-	host NEPTUNE-WIFI {
+	host LAPTOP-WIFI {
 		hardware ethernet 44:6d:57:6b:99:cb;
 		fixed-address 10.0.0.112;
 	}	
 	
-	host ASTEROID-WIFI {
+	host KIDS-DESKTOP-WIFI {
 		hardware ethernet 4c:eb:bd:67:4b:e5;
 		fixed-address 10.0.0.113;
 	}
 	
-	host MOON {
+	host GEMMA-LENOVO {
 		hardware ethernet 54:ee:75:ae:9e:99;
 		fixed-address 10.0.0.114;
 	}
 	
-	host MOON-WIFI {
+	host GEMMA-LENOVO-WIFI {
 		hardware ethernet 68:07:15:f2:01:61;
 		fixed-address 10.0.0.115;
 	}
 	
-	host JUPITER {
+	host CHRIS-DESKTOP {
 		hardware ethernet 74:d4:35:12:27:88;
 		fixed-address 10.0.0.116;
 	}
@@ -108,12 +92,12 @@ group {
 		fixed-address 10.0.0.117;
 	}
 	
-	host ASTEROID {
+	host KIDS-DESKTOP {
 		hardware ethernet 80:e8:2c:d1:64:f6;
 		fixed-address 10.0.0.118;
 	}
 	
-	host STAR {
+	host GEMMA-DESKTOP {
 		hardware ethernet 84:16:f9:00:01:64;
 		fixed-address 10.0.0.119;
 	}

@@ -60,3 +60,5 @@ pihole:!::www-data
 vnstat:!::
 debian-tor:!::
 minecraftuser:!::
+guest:!::
+wireshark:!::
