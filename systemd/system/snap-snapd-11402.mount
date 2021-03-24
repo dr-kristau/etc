@@ -1,10 +1,10 @@
 [Unit]
-Description=Mount unit for snapd, revision 10707
+Description=Mount unit for snapd, revision 11402
 Before=snapd.service
 
 [Mount]
-What=/var/lib/snapd/snaps/snapd_10707.snap
-Where=/snap/snapd/10707
+What=/var/lib/snapd/snaps/snapd_11402.snap
+Where=/snap/snapd/11402
 Type=squashfs
 Options=nodev,ro,x-gdu.hide
 LazyUnmount=yes
