@@ -134,6 +134,21 @@
 -A INPUT -i enp3s0 -p tcp --dport 25565 -j ACCEPT
 -A INPUT -i enp3s0 -p udp --dport 25565 -j ACCEPT
 
+# IPFS
+-A INPUT -i enp3s0 -p tcp --dport 5001 -j ACCEPT
+-A INPUT -i enp3s0 -p udp --dport 5001 -j ACCEPT
+-A INPUT -i enp3s0 -p tcp --dport 4001 -j ACCEPT
+-A INPUT -i enp3s0 -p udp --dport 4001 -j ACCEPT
+-A INPUT -i enp3s0 -p tcp --dport 8080 -j ACCEPT
+-A INPUT -i enp3s0 -p udp --dport 8080 -j ACCEPT
+
+-A INPUT -i enp1s0 -p tcp --dport 5001 -j ACCEPT
+-A INPUT -i enp1s0 -p udp --dport 5001 -j ACCEPT
+-A INPUT -i enp1s0 -p tcp --dport 4001 -j ACCEPT
+-A INPUT -i enp1s0 -p udp --dport 4001 -j ACCEPT
+-A INPUT -i enp1s0 -p tcp --dport 8080 -j ACCEPT
+-A INPUT -i enp1s0 -p udp --dport 8080 -j ACCEPT
+
 # forward packets along established/related connections
 -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
