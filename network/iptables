@@ -60,6 +60,9 @@
 :FORWARD DROP [0:0]
 :OUTPUT ACCEPT [0:0]
 
+# ipset blacklist
+-A INPUT -m set --match-set blacklist src -j DROP
+
 # Don't attempt to firewall internal traffic on the loopback device.
 -A INPUT -i lo -j ACCEPT
 
@@ -160,6 +163,9 @@
 -A INPUT -i enp1s0 -p udp --dport 4001 -j ACCEPT
 -A INPUT -i enp1s0 -p tcp --dport 8080 -j ACCEPT
 -A INPUT -i enp1s0 -p udp --dport 8080 -j ACCEPT
+
+# ipset blacklist
+-A FORWARD -i enp3s0 -o enp1s0 -m set --match-set blacklist src -j DROP
 
 # forward packets along established/related connections
 -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
