@@ -23,6 +23,7 @@
 10.0.0.126 GEMMA-MOBILE
 10.0.0.127 LLUC-MOBILE
 10.0.0.128 ALBA-BQ-MOBILE
+10.0.0.129 GEMMA-SAMSUNG
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
