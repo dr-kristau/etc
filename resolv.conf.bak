@@ -10,6 +10,6 @@
 # See man:systemd-resolved.service(8) for details about the supported modes of
 # operation for /etc/resolv.conf.
 
+nameserver fdb1:3d0e:7458:1f46::2
 nameserver 9.9.9.9
 nameserver fe80::1%2
-nameserver fdb1:3d0e:7458:1f46::2
