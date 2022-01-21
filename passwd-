@@ -39,4 +39,7 @@ minecraftuser:x:1001:1001:,,,:/home/minecraftuser:/bin/bash
 guest:x:1002:1002:,,,:/home/guest:/bin/bash
 radvd:x:115:65534::/var/run/radvd:/usr/sbin/nologin
 usbmux:x:116:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
-bgpalerter:x:1003:1003::/home/bgpalerter:/bin/bash
+bgpalerter:x:1003:1003:,,,:/home/bgpalerter:/bin/bash
+dnsmasq:x:117:65534:dnsmasq,,,:/var/lib/misc:/usr/sbin/nologin
+cockpit-ws:x:118:122::/nonexisting:/usr/sbin/nologin
+cockpit-wsinstance:x:119:123::/nonexisting:/usr/sbin/nologin

@@ -63,3 +63,6 @@ minecraftuser:x:1001:
 guest:x:1002:
 wireshark:x:120:tofol
 bgpalerter:x:1003:
+netdev:x:121:
+cockpit-ws:x:122:
+cockpit-wsinstance:x:123:

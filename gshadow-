@@ -62,3 +62,6 @@ debian-tor:!::
 minecraftuser:!::
 guest:!::
 wireshark:!::tofol
+bgpalerter:!::
+netdev:!::
+cockpit-ws:!::
