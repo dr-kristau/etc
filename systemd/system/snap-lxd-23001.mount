@@ -1,11 +1,11 @@
 [Unit]
-Description=Mount unit for core18, revision 2253
+Description=Mount unit for lxd, revision 23001
 Before=snapd.service
 After=zfs-mount.service
 
 [Mount]
-What=/var/lib/snapd/snaps/core18_2253.snap
-Where=/snap/core18/2253
+What=/var/lib/snapd/snaps/lxd_23001.snap
+Where=/snap/lxd/23001
 Type=squashfs
 Options=nodev,ro,x-gdu.hide,x-gvfs-hide
 LazyUnmount=yes
