@@ -1,57 +1,96 @@
 #!/bin/sh
+set -ue
 
-set -e
+# note that all variables can be changed by editing $CONFIG
+CONFIG=/etc/chkrootkit/chkrootkit.conf
 
 CHKROOTKIT=/usr/sbin/chkrootkit
-CF=/etc/chkrootkit.conf
+
 LOG_DIR=/var/log/chkrootkit
-IGNORE_FILE=/dev/null
 
-if [ ! -x $CHKROOTKIT ]; then
-  exit 0
+OUTPUT="$LOG_DIR/log.today"
+RAW_OUTPUT="$OUTPUT.raw"
+EXPECTED_OUTPUT="$LOG_DIR/log.expected"
+
+# If you do not want to use ionice, set IONICE="" in $CONFIG
+if [ -x /usr/bin/ionice ] && /usr/bin/ionice -c3 true 2>/dev/null; then
+		IONICE="/usr/bin/ionice -c3"
+else
+		IONICE=""
 fi
 
-if [ -f $CF ]; then
-    . $CF
+RUN_DAILY=false # $CONFIG should set this to 'true'
+DIFF_MODE=false
+RUN_DAILY_OPTS=""
+
+## lines matching patterns in here are omitted entirely from the output, if the file exists.
+IGNORE_FILE="/etc/chkrootkit/chkrootkit.ignore"
+
+## The output (after any IGNORE_FILE) is passed through $FILTER)
+FILTER="sed -re 's![[:alnum:]]+: PACKET SNIFFER\(((/lib/systemd/systemd-networkd|(/usr)?/sbin/(dhclient|dhcpc?d[0-9]*|wpa_supplicant|NetworkManager))\[[0-9]+\](, )?)+\)!<interface>: PACKET SNIFFER\([systemd-networkd|dhclient|dhcpd|dhcpcd|wpa_supplicant|NetworkManager]{PID}\)!' -e 's/(! [[:alnum:]+-]+)\s+[0-9]+/\1 {PID}/'"
+
+if [ ! -x "$CHKROOTKIT" ]; then
+	exit 0
 fi
 
-if [ ! -r "${IGNORE_FILE}" ]; then
- IGNORE_FILE=/dev/null
+if [ -r "$CONFIG" ]; then
+	. "$CONFIG"
 fi
 
+# support upgrades from bullseye where $OLD_CONFIG was used
+OLD_CONFIG=/etc/chkrootkit.conf
+if [ -r "$OLD_CONFIG" ]; then
+		echo "WARNING: $OLD_CONFIG is deprecated. Please put your settings in $CONFIG instead: $OLD_CONFIG will be ignored in a future release and should be deleted."
+		. $OLD_CONFIG
+fi
 
-if [ "$RUN_DAILY" = "true" ]; then
-    if [ "$DIFF_MODE" = "true" ]; then
-				eval $CHKROOTKIT $RUN_DAILY_OPTS | egrep -v -f "${IGNORE_FILE}" > $LOG_DIR/log.today.raw 2>&1
-				# the sed expression replaces the messages about /sbin/dhclient3 /usr/sbin/dhcpd3
-				# with a message that is the same whatever order eth0 and eth1 were scanned
-				sed -r -e 's,eth(0|1)(:[0-9])?: PACKET SNIFFER\((/sbin/dhclient|/usr/sbin/dhcpd)\[[0-9]+\]\),eth\[0|1\]: PACKET SNIFFER\([dhclient|dhcpd]{PID}\),' \
-				-e 's/(! \w+\s+)[ 0-9]{4}[0-9]/\1#####/' $LOG_DIR/log.today.raw > $LOG_DIR/log.today
-        if [ ! -f $LOG_DIR/log.expected ]; then
-						echo "ERROR: No file $LOG_DIR/log.expected"
-						echo "This file should contain expected output from chkrootkit"
-						echo
-						echo "Today's run produced the following output:"
-						echo "--- [ BEGIN: cat $LOG_DIR/log.today  ] ---"
-						cat $LOG_DIR/log.today
-						echo "--- [ END: cat $LOG_DIR/log.today ] ---"
-						echo
-						echo "To create this file containing all output from today's run, do (as root)"
-						echo "# cp -a $LOG_DIR/log.today $LOG_DIR/log.expected"
-						echo "# (note that unedited output is in $LOG_DIR/log.today.raw)"
-				elif ! diff -q $LOG_DIR/log.expected $LOG_DIR/log.today > /dev/null 2>&1; then
-						echo "ERROR: chkrootkit output was not as expected."
-						echo
-						echo "The difference is:"
-						echo "---[ BEGIN: diff -u $LOG_DIR/log.expected $LOG_DIR/log.today ] ---"
-						diff -u $LOG_DIR/log.expected $LOG_DIR/log.today || true
-						echo "---[ END: diff -u $LOG_DIR/log.expected $LOG_DIR/log.today ] ---"
-						echo
-           					echo "To update the expected output, run (as root)"
-						echo "#  cp -a -f $LOG_DIR/log.today $LOG_DIR/log.expected"
-						echo "# (note that unedited output is in $LOG_DIR/log.today.raw)"
-        fi
-    else
-        eval $CHKROOTKIT $RUN_DAILY_OPTS | (egrep -v -f "${IGNORE_FILE}" || true)
-    fi
+if [ "$RUN_DAILY" = "false" ]; then
+		exit 0
+fi
+
+if [ ! -r "$IGNORE_FILE" ]; then
+	IGNORE_FILE=/dev/null
+fi
+
+if [ -z "$FILTER" ]; then
+		# explicitly disabled
+		FILTER=cat
+elif ! echo "test" | eval "$FILTER" >/dev/null 2>&1; then
+		echo "Ignoring invalid \$FILTER='$FILTER'"
+		FILTER=cat
+fi
+
+# Run, filter, and save output
+eval "$IONICE" "$CHKROOTKIT" "$RUN_DAILY_OPTS" 2>&1 \
+		| tee "$RAW_OUTPUT" 2>&1 \
+		| eval "$FILTER" \
+		| egrep -v -f "$IGNORE_FILE" 2>&1 \
+		> "$OUTPUT" 2>&1 || true
+
+# show results
+if [ "$DIFF_MODE" = "false" ]; then
+		cat "$OUTPUT" 2>&1 || true
+elif [ ! -f "$EXPECTED_OUTPUT" ]; then
+		echo "No file $LOG_DIR/log.expected"
+		echo "This file should contain expected output from chkrootkit"
+		echo
+		echo "Today's run produced the following output:"
+		echo "--- [ BEGIN: cat $OUTPUT ] ---"
+		cat "$LOG_DIR/log.today" 2>&1 || true
+		echo "--- [ END: cat $OUTPUT ] ---"
+		echo
+		echo "To create this file containing all output from today's run, do (as root)"
+		echo "# cp -a $OUTPUT $EXPECTED_OUTPUT"
+		echo "# (note that unedited output is in $RAW_OUTPUT)"
+elif ! diff -q "$EXPECTED_OUTPUT" "$OUTPUT" > /dev/null 2>&1; then
+		echo "chkrootkit output was not as expected."
+		echo
+		echo "The difference is:"
+		echo "--- [ BEGIN: diff -u $EXPECTED_OUTPUT $OUTPUT ] ---"
+		diff -u "$EXPECTED_OUTPUT" "$OUTPUT" 2>&1 || true
+		echo "--- [ END: diff -u $EXPECTED_OUTPUT $OUTPUT ] ---"
+		echo
+		echo "To update the expected output, run (as root)"
+		echo "#  cp -a -f $OUTPUT $EXPECTED_OUTPUT"
+		echo "# (note that unedited output is in $RAW_OUTPUT)"
 fi

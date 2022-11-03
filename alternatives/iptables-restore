@@ -1,1 +1,1 @@
-/usr/sbin/iptables-legacy-restore
+/usr/sbin/iptables-nft-restore

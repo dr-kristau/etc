@@ -1,1 +1,1 @@
-/usr/sbin/ip6tables-legacy-restore
+/usr/sbin/ip6tables-nft-restore

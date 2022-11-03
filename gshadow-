@@ -50,7 +50,6 @@ syslog:!::
 tss:!::
 uuidd:!::
 tcpdump:!::
-ssh:!::
 landscape:!::
 lxd:!::tofol
 systemd-coredump:!!::
@@ -62,6 +61,8 @@ debian-tor:!::
 minecraftuser:!::
 guest:!::
 wireshark:!::tofol
-bgpalerter:!::
 netdev:!::
 cockpit-ws:!::
+cockpit-wsinstance:!::
+sgx:!::
+_ssh:!::

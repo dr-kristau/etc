@@ -1,1 +1,1 @@
-/usr/sbin/iptables-legacy
+/usr/sbin/iptables-nft

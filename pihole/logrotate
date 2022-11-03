@@ -1,4 +1,4 @@
-/var/log/pihole.log {
+/var/log/pihole/pihole.log {
 	su root syslog
 	daily
 	copytruncate
@@ -9,7 +9,7 @@
 	nomail
 }
 
-/var/log/pihole-FTL.log {
+/var/log/pihole/FTL.log {
 	su root syslog
 	weekly
 	copytruncate

@@ -50,7 +50,6 @@ syslog:x:110:
 tss:x:111:
 uuidd:x:112:
 tcpdump:x:113:
-ssh:x:114:
 landscape:x:115:
 lxd:x:116:tofol
 systemd-coredump:x:999:
@@ -62,7 +61,9 @@ debian-tor:x:119:
 minecraftuser:x:1001:
 guest:x:1002:
 wireshark:x:120:tofol
-bgpalerter:x:1003:
 netdev:x:121:
 cockpit-ws:x:122:
 cockpit-wsinstance:x:123:
+sgx:x:124:
+_ssh:x:114:
+fwupd-refresh:x:125:

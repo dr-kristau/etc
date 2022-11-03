@@ -39,7 +39,7 @@ minecraftuser:$6$g6ioI8V1GxKGu23w$z3Re8km5t9l5ACnunedl88jLW2jGnB.DA9cd/f6D/tbK2g
 guest:$6$W6JnCTRFdZp7wIi8$D.Uf1pyrQ8oXSwVkwFyyx1bwjrVIhGih5h39qcBIVltRl/sJm46qLfh5wV9lXCBrAAf.LDh047Njilemc9dtM0:18568:0:99999:7:::
 radvd:*:18573:0:99999:7:::
 usbmux:*:18765:0:99999:7:::
-bgpalerter:*:18906:0:99999:7:::
 dnsmasq:*:19013:0:99999:7:::
 cockpit-ws:*:19013:0:99999:7:::
 cockpit-wsinstance:*:19013:0:99999:7:::
+fwupd-refresh:*:19296:0:99999:7:::

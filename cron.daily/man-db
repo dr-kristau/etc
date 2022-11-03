@@ -9,6 +9,11 @@ if [ -d /run/systemd/system ]; then
     exit 0
 fi
 
+# This should be set by cron, but apparently isn't always; see
+# https://bugs.debian.org/209185.  Add fallbacks so that start-stop-daemon
+# can be found.
+export PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin"
+
 iosched_idle=
 # Don't try to change I/O priority in a vserver or OpenVZ.
 if ! egrep -q '(envID|VxID):.*[1-9]' /proc/self/status && \

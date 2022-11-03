@@ -287,104 +287,27 @@ wtap_encaps = {
 	["VPP"] = 205,
 	["IEEE802_15_4_TAP"] = 206,
 	["LOG_3GPP"] = 207,
-	["USB_2_0"] = 208
+	["USB_2_0"] = 208,
+	["MP4"] = 209,
+	["SLL2"] = 210,
+	["ZWAVE_SERIAL"] = 211,
+	["ETW"] = 212,
+	["ERI_ENB_LOG"] = 213
 }
 wtap = wtap_encaps -- for bw compatibility
 
 
--- Wiretap file types
-wtap_filetypes = {
-	["UNKNOWN"] = 0,
-	["PCAP"] = 1,
-	["PCAPNG"] = 2,
-	["PCAP_NSEC"] = 3,
-	["PCAP_AIX"] = 4,
-	["PCAP_SS991029"] = 5,
-	["PCAP_NOKIA"] = 6,
-	["PCAP_SS990417"] = 7,
-	["PCAP_SS990915"] = 8,
-	["5VIEWS"] = 9,
-	["IPTRACE_1_0"] = 10,
-	["IPTRACE_2_0"] = 11,
-	["BER"] = 12,
-	["HCIDUMP"] = 13,
-	["CATAPULT_DCT2000"] = 14,
-	["NETXRAY_OLD"] = 15,
-	["NETXRAY_1_0"] = 16,
-	["COSINE"] = 17,
-	["CSIDS"] = 18,
-	["DBS_ETHERWATCH"] = 19,
-	["ERF"] = 20,
-	["EYESDN"] = 21,
-	["NETTL"] = 22,
-	["ISERIES"] = 23,
-	["ISERIES_UNICODE"] = 24,
-	["I4BTRACE"] = 25,
-	["ASCEND"] = 26,
-	["NGSNIFFER_UNCOMPRESSED"] = 29,
-	["NGSNIFFER_COMPRESSED"] = 30,
-	["NETXRAY_1_1"] = 31,
-	["NETWORK_INSTRUMENTS"] = 33,
-	["LANALYZER"] = 34,
-	["PPPDUMP"] = 35,
-	["RADCOM"] = 36,
-	["SNOOP"] = 37,
-	["SHOMITI"] = 38,
-	["VMS"] = 39,
-	["K12"] = 40,
-	["TOSHIBA"] = 41,
-	["VISUAL_NETWORKS"] = 42,
-	["PEEKCLASSIC_V56"] = 43,
-	["PEEKCLASSIC_V7"] = 44,
-	["PEEKTAGGED"] = 45,
-	["MPEG"] = 46,
-	["K12TEXT"] = 47,
-	["NETSCREEN"] = 48,
-	["COMMVIEW"] = 49,
-	["BTSNOOP"] = 50,
-	["TNEF"] = 51,
-	["DCT3TRACE"] = 52,
-	["PACKETLOGGER"] = 53,
-	["DAINTREE_SNA"] = 54,
-	["NETSCALER_1_0"] = 55,
-	["NETSCALER_2_0"] = 56,
-	["JPEG_JFIF"] = 57,
-	["IPFIX"] = 58,
-	["MIME"] = 59,
-	["AETHRA"] = 60,
-	["MPEG_2_TS"] = 61,
-	["VWR_80211"] = 62,
-	["VWR_ETH"] = 63,
-	["CAMINS"] = 64,
-	["STANAG_4607"] = 65,
-	["NETSCALER_3_0"] = 66,
-	["LOGCAT"] = 67,
-	["LOGCAT_BRIEF"] = 68,
-	["LOGCAT_PROCESS"] = 69,
-	["LOGCAT_TAG"] = 70,
-	["LOGCAT_THREAD"] = 71,
-	["LOGCAT_TIME"] = 72,
-	["LOGCAT_THREADTIME"] = 73,
-	["LOGCAT_LONG"] = 74,
-	["COLASOFT_CAPSA"] = 75,
-	["COLASOFT_PACKET_BUILDER"] = 76,
-	["JSON"] = 77,
-	["NETSCALER_3_5"] = 78,
-	["NETTRACE_3GPP_32_423"] = 79,
-	["MPLOG"] = 80,
-	["DPA400"] = 81,
-	["RFC7468"] = 82,
-	["RUBY_MARSHAL"] = 83,
-	["SYSTEMD_JOURNAL"] = 84,
-	["LOG_3GPP"] = 85,
-	["TSPREC_SEC"] = 0,
-	["TSPREC_DSEC"] = 1,
-	["TSPREC_CSEC"] = 2,
-	["TSPREC_MSEC"] = 3,
-	["TSPREC_USEC"] = 6,
-	["TSPREC_NSEC"] = 9
-}
-
+--
+-- Generate the wtap_filetypes items for file types, for backwards
+-- compatibility.
+-- We no longer have WTAP_FILE_TYPE_SUBTYPE_ #defines;
+-- built-in file types are registered the same way that
+-- plugin file types are registered.
+--
+-- New code should use wtap_name_to_file_type_subtype to
+-- look up file types by name.
+--
+wtap_filetypes = get_wtap_filetypes()
 
 -- Wiretap timestamp precision types
 wtap_tsprecs = {
@@ -443,16 +366,16 @@ ftypes = {
 	["IPv6"] = 33,
 	["IPXNET"] = 34,
 	["FRAMENUM"] = 35,
-	["PCRE"] = 36,
-	["GUID"] = 37,
-	["OID"] = 38,
-	["EUI64"] = 39,
-	["AX25"] = 40,
-	["VINES"] = 41,
-	["REL_OID"] = 42,
-	["SYSTEM_ID"] = 43,
-	["STRINGZPAD"] = 44,
-	["FCWWN"] = 45
+	["GUID"] = 36,
+	["OID"] = 37,
+	["EUI64"] = 38,
+	["AX25"] = 39,
+	["VINES"] = 40,
+	["REL_OID"] = 41,
+	["SYSTEM_ID"] = 42,
+	["STRINGZPAD"] = 43,
+	["FCWWN"] = 44,
+	["STRINGZTRUNC"] = 45
 }
 
 
@@ -476,6 +399,8 @@ wtap_rec_types = {
 	["FT_SPECIFIC_EVENT"] = 1,  -- file-type-specific event 
 	["FT_SPECIFIC_REPORT"] = 2,  -- file-type-specific report 
 	["SYSCALL"] = 3,  -- system call 
+	["SYSTEMD_JOURNAL_EXPORT"] = 4,  -- systemd journal entry 
+	["CUSTOM_BLOCK"] = 5,  -- pcapng custom block 
 }
 
 
@@ -485,9 +410,6 @@ wtap_presence_flags = {
 	["TS"] = 1,  -- time stamp 
 	["CAP_LEN"] = 2,  -- captured length separate from on-the-network length 
 	["INTERFACE_ID"] = 4,  -- interface ID 
-	["COMMENTS"] = 8,  -- comments 
-	["DROP_COUNT"] = 16,  -- drop count 
-	["PACK_FLAGS"] = 32,  -- packet flags 
 }
 
 
@@ -524,22 +446,8 @@ base = {
 -- Encodings
 ENC_BIG_ENDIAN = 0
 ENC_LITTLE_ENDIAN = 2147483648
-ENC_TIME_SECS_NSECS = 0
-ENC_TIME_TIMESPEC = 0
-ENC_TIME_NTP = 2
-ENC_TIME_TOD = 4
-ENC_TIME_RTPS = 8
-ENC_TIME_NTP_BASE_ZERO = 8
-ENC_TIME_SECS_USECS = 16
-ENC_TIME_TIMEVAL = 16
-ENC_TIME_SECS = 18
-ENC_TIME_MSECS = 20
-ENC_TIME_SECS_NTP = 24
-ENC_TIME_RFC_3971 = 32
-ENC_TIME_MSEC_NTP = 34
-ENC_TIME_MIP6 = 36
-ENC_ZIGBEE = 1073741824
-ENC_CHARENCODING_MASK = 1073741822
+ENC_NA = 0
+ENC_CHARENCODING_MASK = 65534
 ENC_ASCII = 0
 ENC_ISO_646_IRV = 14
 ENC_UTF_8 = 2
@@ -562,7 +470,8 @@ ENC_ISO_8859_14 = 36
 ENC_ISO_8859_15 = 38
 ENC_ISO_8859_16 = 40
 ENC_WINDOWS_1250 = 42
-ENC_3GPP_TS_23_038_7BITS = 44
+ENC_3GPP_TS_23_038_7BITS_PACKED = 44
+ENC_3GPP_TS_23_038_7BITS = 14
 ENC_EBCDIC = 46
 ENC_MAC_ROMAN = 48
 ENC_CP437 = 50
@@ -574,27 +483,53 @@ ENC_WINDOWS_1251 = 60
 ENC_CP855 = 62
 ENC_CP866 = 64
 ENC_ISO_646_BASIC = 66
-ENC_NA = 0
+ENC_BCD_DIGITS_0_9 = 68
+ENC_KEYPAD_ABC_TBCD = 70
+ENC_KEYPAD_BC_TBCD = 72
+ENC_3GPP_TS_23_038_7BITS_UNPACKED = 76
+ENC_ETSI_TS_102_221_ANNEX_A = 78
+ENC_GB18030 = 80
+ENC_EUC_KR = 82
+ENC_APN_STR = 84
+ENC_ZIGBEE = 1073741824
 ENC_STR_NUM = 16777216
 ENC_STR_HEX = 33554432
 ENC_STRING = 50331648
 ENC_STR_MASK = 65534
 ENC_NUM_PREF = 2097152
-ENC_VARINT_PROTOBUF = 2
-ENC_VARINT_QUIC = 4
-ENC_VARINT_ZIGZAG = 8
 ENC_SEP_NONE = 65536
 ENC_SEP_COLON = 131072
 ENC_SEP_DASH = 262144
 ENC_SEP_DOT = 524288
 ENC_SEP_SPACE = 1048576
 ENC_SEP_MASK = 2031616
+ENC_BCD_ODD_NUM_DIG = 65536
+ENC_BCD_SKIP_FIRST = 131072
+ENC_TIME_SECS_NSECS = 0
+ENC_TIME_TIMESPEC = 0
+ENC_TIME_NTP = 2
+ENC_TIME_TOD = 4
+ENC_TIME_RTPS = 8
+ENC_TIME_NTP_BASE_ZERO = 8
+ENC_TIME_SECS_USECS = 16
+ENC_TIME_TIMEVAL = 16
+ENC_TIME_SECS = 18
+ENC_TIME_MSECS = 20
+ENC_TIME_SECS_NTP = 24
+ENC_TIME_RFC_3971 = 32
+ENC_TIME_MSEC_NTP = 34
+ENC_TIME_MIP6 = 36
+ENC_TIME_CLASSIC_MAC_OS_SECS = 38
+ENC_TIME_NSECS = 40
 ENC_ISO_8601_DATE = 65536
 ENC_ISO_8601_TIME = 131072
 ENC_ISO_8601_DATE_TIME = 196608
 ENC_RFC_822 = 262144
 ENC_RFC_1123 = 524288
 ENC_STR_TIME_MASK = 983040
+ENC_VARINT_PROTOBUF = 2
+ENC_VARINT_QUIC = 4
+ENC_VARINT_ZIGZAG = 8
 
 
 
@@ -682,13 +617,14 @@ MENU_STAT_GENERIC = 3
 MENU_STAT_CONVERSATION = 4
 MENU_STAT_ENDPOINT = 5
 MENU_STAT_RESPONSE = 6
-MENU_STAT_TELEPHONY = 7
-MENU_STAT_TELEPHONY_ANSI = 8
-MENU_STAT_TELEPHONY_GSM = 9
-MENU_STAT_TELEPHONY_LTE = 10
-MENU_STAT_TELEPHONY_MTP3 = 11
-MENU_STAT_TELEPHONY_SCTP = 12
-MENU_TOOLS_UNSORTED = 13
+MENU_STAT_RSERPOOL = 7
+MENU_STAT_TELEPHONY = 8
+MENU_STAT_TELEPHONY_ANSI = 9
+MENU_STAT_TELEPHONY_GSM = 10
+MENU_STAT_TELEPHONY_LTE = 11
+MENU_STAT_TELEPHONY_MTP3 = 12
+MENU_STAT_TELEPHONY_SCTP = 13
+MENU_TOOLS_UNSORTED = 14
 
 
 -- the possible values for Pinfo's p2p_dir attribute

@@ -10,12 +10,14 @@
 #
 # ------------------------------------------------------------------
 
+  abi <abi/3.0>,
+
   /usr/share/AbiSuite/fonts/**          r,
 
   /usr/lib/xorg/modules/fonts/**.so*    mr,
 
-  /usr/share/fonts/                     r,
-  /usr/share/fonts/**                   r,
+  /usr/share/fonts/{,**}                r,
+  /usr/share/fonts-*/{,**}              r,
 
   /etc/fonts/**                         r,
   # Debian, openSUSE paths are different
@@ -50,6 +52,8 @@
   owner @{HOME}/.fonts.conf.d/**        r,
   owner @{HOME}/.config/fontconfig/     r,
   owner @{HOME}/.config/fontconfig/**   r,
+  owner @{HOME}/.Fontmatrix/Activated/  r,
+  owner @{HOME}/.Fontmatrix/Activated/** r,
 
   /usr/local/share/fonts/               r,
   /usr/local/share/fonts/**             r,
@@ -59,3 +63,6 @@
 
   # data files for LibThai
   /usr/share/libthai/thbrk.tri          r,
+
+  # Include additions to the abstraction
+  include if exists <abstractions/fonts.d>

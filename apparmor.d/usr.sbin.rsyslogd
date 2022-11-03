@@ -6,7 +6,7 @@
 # following:
 # watch -n 1 'dmesg | tail -5'
 
-/usr/sbin/rsyslogd {
+profile rsyslogd /usr/sbin/rsyslogd {
   #include <abstractions/base>
   #include <abstractions/nameservice>
 

@@ -3,6 +3,11 @@
 # exit if the resolvconf package is installed
 [ -x /sbin/resolvconf ] && exit 0
 
+# exit if systemd-resolved is running
+[ -e /run/systemd/system ] && \
+  systemctl is-active --quiet systemd-resolved.service &&
+  exit 0
+
 # follow any symlink to find the real file
 if [ -e /etc/resolv.conf ]; then
   REALRESOLVCONF=$(readlink --canonicalize /etc/resolv.conf)
@@ -21,4 +26,3 @@ if [ -e $REALRESOLVCONF.pppd-backup.$PPP_IFACE ]; then
 fi
 
 exit 0
-

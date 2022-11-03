@@ -17,6 +17,11 @@
   @{PROC}/[0-9]*/net/ r,
   @{PROC}/[0-9]*/net/** r,
 
+  # dhclient wants to update its threads with functional names
+  # https://gitlab.com/apparmor/apparmor/-/merge_requests/730
+  # see LP: #1918410
+  owner @{PROC}/@{pid}/task/[0-9]*/comm rw,
+
   /{,usr/}sbin/dhclient mr,
   # LP: #1197484 and LP: #1202203 - why is this needed? :(
   /{,usr/}bin/bash mr,
@@ -32,6 +37,7 @@
   # NetworkManager
   /{,var/}run/nm*conf r,
   /{,var/}run/sendsigs.omit.d/network-manager.dhclient*.pid lrw,
+  /{,var/}run/NetworkManager/dhclient*.pid lrw,
   /var/lib/NetworkManager/dhclient*.conf lrw,
   /var/lib/NetworkManager/dhclient*.lease* lrw,
   signal (receive) peer=/usr/sbin/NetworkManager,
