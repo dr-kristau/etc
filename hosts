@@ -29,6 +29,7 @@
 10.0.0.132 SUN2000-HV2140
 10.0.0.133 ALBA_GALAXY
 10.0.0.134 LLUC_GALAXY
+10.0.0.135 XIAOMI_EPHONE
 
 # The following lines are desirable for IPv6 capable hosts
 ::1     ip6-localhost ip6-loopback
