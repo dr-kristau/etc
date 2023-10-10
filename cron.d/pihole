@@ -18,7 +18,7 @@
 #          early morning. Download any updates from the adlists
 #          Squash output to log, then splat the log to stdout on error to allow for
 #          standard crontab job error handling.
-58 4   * * 7   root    PATH="$PATH:/usr/sbin:/usr/local/bin/" pihole updateGravity >/var/log/pihole/pihole_updateGravity.log || cat /var/log/pihole/pihole_updateGravity.log
+27 4   * * 7   root    PATH="$PATH:/usr/sbin:/usr/local/bin/" pihole updateGravity >/var/log/pihole/pihole_updateGravity.log || cat /var/log/pihole/pihole_updateGravity.log
 
 # Pi-hole: Flush the log daily at 00:00
 #          The flush script will use logrotate if available
@@ -29,5 +29,5 @@
 @reboot root /usr/sbin/logrotate --state /var/lib/logrotate/pihole /etc/pihole/logrotate
 
 # Pi-hole: Grab remote and local version every 24 hours
-13 18  * * *   root    PATH="$PATH:/usr/sbin:/usr/local/bin/" pihole updatechecker
+44 12  * * *   root    PATH="$PATH:/usr/sbin:/usr/local/bin/" pihole updatechecker
 @reboot root    PATH="$PATH:/usr/sbin:/usr/local/bin/" pihole updatechecker reboot

@@ -24,6 +24,9 @@
   owner @{PROC}/@{pid}/comm rw,
   owner @{PROC}/@{pid}/task/[0-9]*/comm rw,
 
+  # LP: #1926139
+  @{PROC}/cmdline r,
+
   /etc/hosts.allow r,
   /etc/hosts.deny r,
 

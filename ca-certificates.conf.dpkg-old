@@ -121,9 +121,9 @@ mozilla/TWCA_Global_Root_CA.crt
 mozilla/TWCA_Root_Certification_Authority.crt
 !mozilla/Taiwan_GRCA.crt
 mozilla/TeliaSonera_Root_CA_v1.crt
-mozilla/TrustCor_ECA-1.crt
-mozilla/TrustCor_RootCert_CA-1.crt
-mozilla/TrustCor_RootCert_CA-2.crt
+!mozilla/TrustCor_ECA-1.crt
+!mozilla/TrustCor_RootCert_CA-1.crt
+!mozilla/TrustCor_RootCert_CA-2.crt
 !mozilla/Trustis_FPS_Root_CA.crt
 mozilla/USERTrust_ECC_Certification_Authority.crt
 mozilla/USERTrust_RSA_Certification_Authority.crt
