@@ -1,12 +1,12 @@
 [Unit]
-Description=Mount unit for lxd, revision 25846
+Description=Mount unit for core20, revision 2105
 After=snapd.mounts-pre.target
 Before=snapd.mounts.target
 Before=local-fs.target
 
 [Mount]
-What=/var/lib/snapd/snaps/lxd_25846.snap
-Where=/snap/lxd/25846
+What=/var/lib/snapd/snaps/core20_2105.snap
+Where=/snap/core20/2105
 Type=squashfs
 Options=nodev,ro,x-gdu.hide,x-gvfs-hide
 LazyUnmount=yes

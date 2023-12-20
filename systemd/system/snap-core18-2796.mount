@@ -1,12 +1,12 @@
 [Unit]
-Description=Mount unit for snapd, revision 19993
+Description=Mount unit for core18, revision 2796
 After=snapd.mounts-pre.target
 Before=snapd.mounts.target
 Before=local-fs.target
 
 [Mount]
-What=/var/lib/snapd/snaps/snapd_19993.snap
-Where=/snap/snapd/19993
+What=/var/lib/snapd/snaps/core18_2796.snap
+Where=/snap/core18/2796
 Type=squashfs
 Options=nodev,ro,x-gdu.hide,x-gvfs-hide
 LazyUnmount=yes
